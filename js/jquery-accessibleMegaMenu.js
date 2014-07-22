@@ -629,6 +629,20 @@ limitations under the License.
          * @private
          */
         _mouseDownHandler = function (event) {
+            //#vincent's edits
+            if (this.menu.find('[aria-expanded=true].' + this.settings.panelClass).length) {
+                var that = this;
+                if (event.target.getAttribute("aria-expanded") && ($(event.target).hasClass(this.settings.panelClass) != true )) {
+                    $(event.target)
+                        .removeClass(this.settings.hoverClass);
+                    _togglePanel.call(that, event, true); 
+                 };
+                }   else   {
+                $(event.target)
+                    .addClass(this.settings.hoverClass);
+                _togglePanel.call(this, event);  
+            };
+            // -vincents edits
             if ($(event.target).is(":tabbable, :focusable, ." + this.settings.panelClass)) {
                 this.mouseFocused = true;
             }
@@ -647,9 +661,15 @@ limitations under the License.
          */
         _mouseOverHandler = function (event) {
             clearTimeout(this.mouseTimeoutID);
-            $(event.target)
-                .addClass(this.settings.hoverClass);
-            _togglePanel.call(this, event);
+            //  #vince edit
+            if(this.menu.find('[aria-expanded=true].' + this.settings.panelClass).length) {    
+                $(event.target)
+                    .addClass(this.settings.hoverClass);
+                _togglePanel.call(this, event);
+            }   else    {
+                    $('.nav-menu>.nav-item>a').bind('click',function (event){event.preventDefault();});
+                }
+            // /vince edit
             if ($(event.target).is(':tabbable')) {
                 $('html').on('keydown.accessible-megamenu', $.proxy(_keyDownHandler, event.target));
             }
